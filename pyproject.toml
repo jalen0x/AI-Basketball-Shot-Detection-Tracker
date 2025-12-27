@@ -21,6 +21,15 @@ dependencies = [
     "filterpy==1.4.5",
     "scikit-image>=0.19.3",
     "lapx>=0.5.2",
+    "tensorflow>=2.0.0,<=2.19.0",
+    "tf-keras<=2.19.0",
+    "onnx>=1.12.0,<2.0.0",
+    "onnxruntime",
+    "onnxslim>=0.1.71",
+    "onnx2tf>=1.26.3",
+    "sng4onnx>=1.0.1",
+    "ai-edge-litert>=1.2.0,<1.4.0",
+    "onnx-graphsurgeon",
 ]
 
 [tool.uv]
