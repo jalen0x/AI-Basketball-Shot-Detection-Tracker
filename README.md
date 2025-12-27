@@ -18,13 +18,20 @@ This project combines the power of Machine Learning and Computer Vision for the 
 
 ```
 ├── README.md
-├── best.pt             # Pre-trained model
-├── config.yaml         # Dataset configuration
-├── main.py             # YoloV8 training script
-├── requirements.txt    
-├── shot_detector.py    # Detection algorithm
-├── utils.py            # Helper functions
-└── video_test_5.mp4    # Test Video
+├── best.pt                    # Pre-trained PyTorch model (6.0 MB)
+├── models/                    # Exported models for mobile deployment
+│   ├── android/
+│   │   └── best_int8.tflite  # Android model (INT8 quantized, 3.2 MB)
+│   └── ios/
+│       └── best.mlpackage    # iOS model (CoreML FP16, 5.9 MB)
+├── config.yaml               # Dataset configuration
+├── main.py                   # YOLOv8 training script
+├── pyproject.toml            # Project dependencies (uv/pip)
+├── shot_detector.py          # Detection algorithm
+├── utils.py                  # Helper functions
+├── test_android_model.py     # Test script for Android model
+├── test_ios_model.py         # Test script for iOS model
+└── video_test_5.mp4          # Test video
 ```
 
 ## Model Training
@@ -41,13 +48,66 @@ A linear regression is used to predict the ball's trajectory based on its positi
 
 ## How to Use This Code
 
-1. Clone this repository to your local machine. Install the requirements.
-2. Download the dataset specified in 'config.yaml' and adjust the paths in the configuration file to match your local setup.
-3. Follow the instructions in 'main.py' to train the model and prepare for shot detection.
-4. Run 'shot_detector.py' through your webcam or iPhone for real-time shot detection. Or input a video for shot detection analysis.
-   
-**If you don't want to train the model yourself, please use the pre-trained 'best.pt' model (skip steps 2 & 3)**
-   
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd AI-Basketball-Shot-Detection-Tracker
+
+# Install dependencies using uv (recommended)
+uv sync
+
+# Or using pip
+pip install -e .
+```
+
+### Training (Optional)
+
+1. Download the dataset specified in 'config.yaml' and adjust the paths in the configuration file to match your local setup.
+2. Follow the instructions in 'main.py' to train the model and prepare for shot detection.
+
+**If you don't want to train the model yourself, please use the pre-trained 'best.pt' model**
+
+### Running Shot Detection
+
+```bash
+# Run real-time shot detection with webcam or video
+python shot_detector.py
+```
+
+### Mobile Deployment
+
+Pre-exported models are available in the `models/` directory:
+
+**Android (TensorFlow Lite)**
+- Model: `models/android/best_int8.tflite`
+- Format: INT8 quantized for optimal performance
+- Size: 3.2 MB
+- Recommended: Use with NNAPI or GPU delegate on device
+
+**iOS (CoreML)**
+- Model: `models/ios/best.mlpackage`
+- Format: FP16 for Apple Neural Engine
+- Size: 5.9 MB
+- Optimized for iOS/iPadOS deployment
+
+### Testing Models
+
+Test and compare model performance:
+
+```bash
+# Test Android TFLite model vs PyTorch (side-by-side comparison)
+python test_android_model.py
+
+# Test iOS CoreML model vs PyTorch (side-by-side comparison)
+python test_ios_model.py
+```
+
+**Note:** Mobile model performance testing on macOS does not reflect real device performance. TFLite and CoreML models should be tested on actual Android/iOS devices for accurate benchmarks.
+
+### Contributing
+
 Contributions to this project are welcome - submit a pull request. For issues or suggestions, open an issue in this repository.
 
 ## Disclaimer

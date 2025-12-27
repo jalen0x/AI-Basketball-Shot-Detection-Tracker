@@ -18,13 +18,20 @@ https://github.com/avishah3/AI-Basketball-Shot-Detector-Tracker/assets/115107522
 
 ```
 ├── README.md
-├── best.pt             # 训练好的模型
-├── config.yaml         # 数据集配置文件
-├── main.py             # YoloV8训练脚本
-├── requirements.txt    # 所需依赖包
-├── shot_detector.py    # 投篮检测核心程序
-├── utils.py            # 辅助工具文件
-└── video_test_5.mp4    # 测试用视频
+├── best.pt                    # PyTorch 训练模型 (6.0 MB)
+├── models/                    # 移动端部署模型
+│   ├── android/
+│   │   └── best_int8.tflite  # 安卓模型 (INT8 量化, 3.2 MB)
+│   └── ios/
+│       └── best.mlpackage    # iOS 模型 (CoreML FP16, 5.9 MB)
+├── config.yaml               # 数据集配置文件
+├── main.py                   # YOLOv8 训练脚本
+├── pyproject.toml            # 项目依赖配置 (uv/pip)
+├── shot_detector.py          # 投篮检测核心程序
+├── utils.py                  # 辅助工具文件
+├── test_android_model.py     # 安卓模型测试脚本
+├── test_ios_model.py         # iOS 模型测试脚本
+└── video_test_5.mp4          # 测试视频
 ```
 
 ## 模型训练
@@ -41,12 +48,67 @@ https://github.com/avishah3/AI-Basketball-Shot-Detector-Tracker/assets/115107522
 
 ## 如何使用此代码
 
-1. 克隆此仓库到本地机器。
-2. 下载`config.yaml`中指定的数据集，并调整配置文件中的路径以匹配你的本地设置。
-3. 按照`main.py`中的指示进行模型训练，准备进行投篮检测。
-4. 通过你的摄像头或iPhone运行`shot_detector.py`进行实时投篮检测，或者输入视频进行投篮检测分析。
-5. 如果你不想自己训练模型，可以使用根目录中的已经训练好的`best.pth`模型。
-6. 请确保已安装所需的Python包，包括OpenCV、numpy和Ultralytics的YOLO。欢迎对本项目进行贡献 - 提交Pull Request。对于问题或建议，请在本仓库中提交问题。
+### 安装
+
+```bash
+# 克隆仓库
+git clone <repository-url>
+cd AI-Basketball-Shot-Detection-Tracker
+
+# 使用 uv 安装依赖（推荐）
+uv sync
+
+# 或使用 pip
+pip install -e .
+```
+
+### 模型训练（可选）
+
+1. 下载 `config.yaml` 中指定的数据集，并调整配置文件中的路径以匹配你的本地设置。
+2. 按照 `main.py` 中的指示进行模型训练，准备进行投篮检测。
+
+**如果你不想自己训练模型，可以直接使用预训练的 `best.pt` 模型**
+
+### 运行投篮检测
+
+```bash
+# 通过摄像头或视频运行实时投篮检测
+python shot_detector.py
+```
+
+### 移动端部署
+
+`models/` 目录中提供了预导出的移动端模型：
+
+**安卓 (TensorFlow Lite)**
+- 模型：`models/android/best_int8.tflite`
+- 格式：INT8 量化，优化性能
+- 大小：3.2 MB
+- 推荐：在设备上使用 NNAPI 或 GPU delegate
+
+**iOS (CoreML)**
+- 模型：`models/ios/best.mlpackage`
+- 格式：FP16，适配 Apple Neural Engine
+- 大小：5.9 MB
+- 优化用于 iOS/iPadOS 部署
+
+### 模型测试
+
+测试和对比模型性能：
+
+```bash
+# 测试安卓 TFLite 模型 vs PyTorch（并排对比）
+python test_android_model.py
+
+# 测试 iOS CoreML 模型 vs PyTorch（并排对比）
+python test_ios_model.py
+```
+
+**注意：** 在 macOS 上测试移动端模型性能不能反映真实设备性能。TFLite 和 CoreML 模型应在实际的安卓/iOS 设备上测试以获得准确的性能基准。
+
+### 贡献
+
+欢迎对本项目进行贡献 - 提交 Pull Request。对于问题或建议，请在本仓库中提交 Issue。
 
 ## 免责声明
 
