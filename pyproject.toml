@@ -30,6 +30,7 @@ dependencies = [
     "sng4onnx>=1.0.1",
     "ai-edge-litert>=1.2.0,<1.4.0",
     "onnx-graphsurgeon",
+    "coremltools>=9.0",
 ]
 
 [tool.uv]
